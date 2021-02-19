@@ -82,16 +82,18 @@
         }
 
         document.getElementById("reset").addEventListener("click", function(){
-            console.log("RESET");
+            //console.log("RESET");
             tiempo = tiempoini;
             clearTimeout(stime);
             document.getElementById("reloj").className = "";
             if(!parado){
                 stime = setInterval(incrementar, incremento);
-                //document.getElementById("stop").innerHTML = "STOP";
+                document.getElementById("stop").innerHTML = "STOP";
+            }
+            else{
+                document.getElementById("stop").innerHTML = "GO";
             }
             document.getElementById("reloj").innerHTML = mostrarTiempo(tiempo);
-            document.getElementById("stop").innerHTML = "GO";
             document.getElementById("stop").style = "";
             confetti.stop();
         });
