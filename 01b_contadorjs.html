@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contador Javascript</title>
+    <style>
+        #reloj {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 300px;
+            font-weight: 800;
+            text-align: center;
+            width: 100%;
+        }
+        .alert{
+            color: red;
+        }
+        #buttons {
+            text-align: center;
+            width: 100%;
+        }
+        #buttons div {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: x-large;
+            display: inline-block;
+            padding: 2px;
+            margin: 4px;
+            width: 140px;
+            height: 30px;
+            background-color: royalblue;
+            color: white;
+            user-select: none;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/mathusummut/confetti.js/confetti.min.js"></script>
+</head>
+<body>
+    <div id="reloj"></div>
+    <div id="buttons"><div id="stop">STOP</div><div id="reset">RESET</div></div>
+    <script>
+        var tiempoini = 20000;
+        var tiempo = tiempoini;
+        var stime = "";
+        var incremento = 10;
+        var parado = false;
+
+        function mostrarTiempo(t){
+            var cad = "";
+            var seg = Math.trunc(t / 1000);
+            var cent = ((t % 1000) / 10);
+
+            var lseg = seg.toString().length;
+            var lcent = cent.toString().length;
+            if(lseg < 2)
+                seg = '0' + seg.toString();
+            if(lcent < 2)
+                cent = '0' + cent.toString();
+            cad =  seg + '.' + cent;
+            return cad;
+        }
+        function incrementar(){
+            //console.log("TIEMPO :" + tiempo);
+            document.getElementById("reloj").innerHTML = mostrarTiempo(tiempo);
+            tiempo = tiempo - incremento;
+            if(tiempo < 0){
+                clearInterval(stime);
+                document.getElementById("stop").style = "display: none";
+                parado = true;
+                confetti.start(3000);
+            }
+            //A partir de 5 segundos, mostramos en rojo el contador
+            if(tiempo <= 5000){
+                document.getElementById("reloj").className = "alert";
+            }
+        }
+
+        window.onload = function (){
+            //stime = setInterval(incrementar(-1), 1000);
+            stime = setInterval(incrementar, incremento);
+        }
+
+        document.getElementById("reset").addEventListener("click", function(){
+            console.log("RESET");
+            tiempo = tiempoini;
+            clearTimeout(stime);
+            document.getElementById("reloj").className = "";
+            if(!parado){
+                stime = setInterval(incrementar, incremento);
+                //document.getElementById("stop").innerHTML = "STOP";
+            }
+            document.getElementById("reloj").innerHTML = mostrarTiempo(tiempo);
+            document.getElementById("stop").innerHTML = "GO";
+            document.getElementById("stop").style = "";
+            confetti.stop();
+        });
+
+        document.getElementById("stop").addEventListener("click", function(){
+            if (parado){
+                //Si está parado y le damos click, lo ponemos en marcha
+                stime = setInterval(incrementar, incremento);
+                //Y le cambiamos el contenido al botón
+                this.innerHTML = "STOP";
+                parado = !parado;
+            }
+            else{
+                //Si no está parado y hacemos click, lo paramos
+                clearInterval(stime);
+                //Y le cambiamos el contenido al botón
+                this.innerHTML = "GO";
+                parado = !parado;
+            }
+        });
+        
+    </script>
+</body>
+</html>
